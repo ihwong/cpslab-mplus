@@ -71,7 +71,7 @@ After these steps, you can test M+’s functionality sharing features across mul
 
 ## M+ Operation (Ex. Dealing with getService seed parcel)
 
-![diagram](assets/diagram.png)
+![diagram](diagram.png)
 
   1. BpBinder::transact() intercepts a seed parcel (request parcel) from the app in a client device. In this example, the seed parcel contains a request for a binder object of the specific system service and this parcel was heading for Android ServiceManager.
   1. BpBinder::transact() redirects the seed parcel to RemoteBinderManager of C-M+.
