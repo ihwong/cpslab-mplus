@@ -4,17 +4,17 @@ Paper: [MobiSys '17] Mobile Plus: Multi-device Mobile Platform for Cross-device 
 
 ## Quickstart
 
-MobilePlus was implemented as a form of system service for AOSP. We added/modified some source codes in following directories (. represents root directory of AOSP source tree): 
+MobilePlus was implemented as a form of system service for AOSP. We added/modified some source codes in following directories (`.` represents root directory of AOSP source tree): 
 
 ### Newly Added Code
 
-./frameworks/mobileplus
+  - `./frameworks/mobileplus`
 
 ### Modification in Existing AOSP Code
 
-./frameworks/base/core/java/android
-./frameworks/base/service/core/java/com/android/server
-./frameworks/native/libs/binder
+  - `./frameworks/base/core/java/android`
+  - `./frameworks/base/service/core/java/com/android/server`
+  - `./frameworks/native/libs/binder`
 
 ### AOSP Build & Flash
 
@@ -51,30 +51,30 @@ $ adb -s [client device] shell setenforce 0
 $ adb -s [client device] shell /system/bin/mobileplus_manager [server's IP]
 ```
 
-After these steps, you can test M+’s functionality sharing features across multiple devices.
+After these steps, you can test M+'s functionality sharing features across multiple devices.
 
 ## Important Classes in MobilePlus
 
-  - RemoteBinderManager: performs a core role within M+. It redirects parcels to the appropriate part of M+ and maintains required information for such redirections.
-  - ConnectionManager: takes charge of the TCP network communication between C-M+ and S-M+.
-  - Remote[Activity / ActivityTask / Package / Service ]Manager: runs on C-M+ and it represents Activity / ActivityTask / Package / Service ]Manager on the opponent(server) device.
-  - [ Activity / ActivityTask / Package / Service]ManagerHandler: runs on S-M+ and it represents [ Activity / ActivityTask / Package / Service]Manager on its(server) device.
-  - ServiceThread: runs on C-M+ and it represents a specific service on the opponent(server) device.
-  - RemoteProxy: runs on S-M+ and it represents a specific service on its(server) device.
+  - **RemoteBinderManager**: performs a core role within M+. It redirects parcels to the appropriate part of M+ and maintains required information for such redirections.
+  - **ConnectionManager**: takes charge of the TCP network communication between C-M+ and S-M+.
+  - **Remote[Activity / ActivityTask / Package / Service ]Manager**: runs on C-M+ and it represents Activity / ActivityTask / Package / Service ]Manager on the opponent(server) device.
+  - **[ Activity / ActivityTask / Package / Service ]ManagerHandler**: runs on S-M+ and it represents [ Activity / ActivityTask / Package / Service]Manager on its(server) device.
+  - **ServiceThread**: runs on C-M+ and it represents a specific service on the opponent(server) device.
+  - **RemoteProxy**: runs on S-M+ and it represents a specific service on its(server) device.
 
 ## Initial Pairing
 
-  1. In a server device, mobileplus_manager binary will start from main() function in ./frameworks/mobileplus/cmds/mobileplus_manager.cpp.
-  1. RemoteBinderManager::instantiate() registers M+ to the system service list and then creates SenderThread and ListenThread (These threads are required by ConnectionManager).
-  1. In a client device, the same process is performed. After this, the client connects to the server device and then executes ConnectionManager::sendBasicServiceHandle().
-  1. Two devices run sendBasicServiceHandle() once and share information about [ Activity / ActivityTask / Package / Service]Manager of each other.
+  1. In a server device, mobileplus_manager binary will start from `main()` function in `./frameworks/mobileplus/cmds/mobileplus_manager.cpp`.
+  1. `RemoteBinderManager::instantiate()` registers M+ to the system service list and then creates SenderThread and ListenThread (These threads are required by ConnectionManager).
+  1. In a client device, the same process is performed. After this, the client connects to the server device and then executes `ConnectionManager::sendBasicServiceHandle()`.
+  1. Two devices run `sendBasicServiceHandle()` once and share information about [ Activity / ActivityTask / Package / Service]Manager of each other.
 
 ## M+ Operation (Ex. Dealing with getService seed parcel)
 
 ![diagram](diagram.png)
 
-  1. BpBinder::transact() intercepts a seed parcel (request parcel) from the app in a client device. In this example, the seed parcel contains a request for a binder object of the specific system service and this parcel was heading for Android ServiceManager.
-  1. BpBinder::transact() redirects the seed parcel to RemoteBinderManager of C-M+.
+  1. `BpBinder::transact()` intercepts a seed parcel (request parcel) from the app in a client device. In this example, the seed parcel contains a request for a binder object of the specific system service and this parcel was heading for Android ServiceManager.
+  1. `BpBinder::transact()` redirects the seed parcel to RemoteBinderManager of C-M+.
   1. RemoteBInderManger sends the seed parcel to RemoteServiceManager. It represents the REAL Android ServiceManager in the server device.
   1. ConnectionManager obtains the seed parcel and does some wrapping for S-M+.
   1. The seed parcel is transmitted from C-M+ to S-M+ via TCP connection.
@@ -88,4 +88,3 @@ After these steps, you can test M+’s functionality sharing features across mul
   1. The reply parcel is transmitted back towards the client app.
   1. The reply parcel is transmitted back towards the client app.
   1. Finally, the client app receives the reply corresponding to the seed parcel (request parcel).
-
