@@ -1,0 +1,99 @@
+cc_library {
+
+    name: "libmobileplus",
+
+    srcs: [
+	"lib/mobileplus/Global.cpp",
+
+        "lib/mobileplus/IRemoteBinderManager.cpp",
+        "lib/mobileplus/RemoteBinderManager.cpp",
+        "lib/mobileplus/BnRemoteBinderManager.cpp",
+        "lib/mobileplus/BpRemoteBinderManager.cpp",
+
+        "lib/mobileplus/ConnectionManager.cpp",
+        "lib/mobileplus/SenderThread.cpp",
+        "lib/mobileplus/ListenThread.cpp",
+	"lib/mobileplus/ServiceThread.cpp",
+		
+	"lib/mobileplus/ServiceHandler.cpp",	
+	"lib/mobileplus/ServiceManagerHandler.cpp",
+	"lib/mobileplus/ActivityManagerHandler.cpp",
+	"lib/mobileplus/ActivityTaskManagerHandler.cpp",
+	"lib/mobileplus/PackageManagerHandler.cpp",
+
+	"lib/mobileplus/RemoteProxy.cpp",
+	"lib/mobileplus/BnRemoteProxy.cpp",
+	"lib/mobileplus/IRemoteProxy.cpp",
+	"lib/mobileplus/BpRemoteProxy.cpp",
+
+	"lib/mobileplus/RemoteActivityManager.cpp",
+	"lib/mobileplus/RemoteActivityTaskManager.cpp",
+	"lib/mobileplus/RemotePackageManager.cpp",
+	"lib/mobileplus/NativeIntent.cpp",
+	"lib/mobileplus/RemoteServiceManager.cpp",
+
+        "lib/messaging/AsyncTask.cpp",
+        "lib/messaging/AtomicInteger.cpp",
+        "lib/messaging/Clock.cpp",
+        "lib/messaging/CondVar.cpp",
+        "lib/messaging/Handler.cpp",
+        "lib/messaging/Lock.cpp",
+        "lib/messaging/Looper.cpp",
+        "lib/messaging/Message.cpp",
+        "lib/messaging/MessageQueue.cpp",
+        "lib/messaging/Ref.cpp",
+        "lib/messaging/Semaphore.cpp",
+        "lib/messaging/SerialExecutor.cpp",
+        "lib/messaging/Thread.cpp",
+        "lib/messaging/ThreadPoolExecutor.cpp",
+
+	"lib/mobileplus/UDSSenderThread.cpp",
+	"lib/mobileplus/UDSReceiverThread.cpp",
+    ],
+
+    shared_libs: [
+        "libcutils",
+        "libutils",
+        "libbinder",
+        "liblog",
+	"libsensor",
+    ],
+
+    local_include_dirs: [
+        "include"
+    ],
+
+    cflags: [
+        "-Wall",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+    ],
+
+}
+
+cc_binary {
+
+    name: "mobileplus_manager",
+
+    srcs: ["cmds/mobileplus_manager.cpp"],
+
+    shared_libs: [
+        "libcutils",
+        "libutils",
+        "libbinder",
+        "liblog",
+        "libmobileplus",
+	"libsensor",
+    ],
+
+    local_include_dirs: [
+        "include"
+    ],
+
+    cflags: [
+        "-Wall",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+    ],
+
+}
